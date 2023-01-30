@@ -1,6 +1,5 @@
 import os
-import requests
-
+import urllib.parse  
 import openai
 from flask import Flask, redirect, render_template, request, url_for
 
@@ -15,7 +14,7 @@ def index():
         response_twi = openai.Completion.create(
                 model="text-davinci-003",
                 prompt=twi_prompt,
-                temperature=0.6,
+                temperature=0.8,
                 max_tokens=1000,
                 )
 
@@ -27,15 +26,16 @@ def index():
             temperature=0.6,
             max_tokens=1000,
         )
-        return redirect(url_for("index", result=response.choices[0].text))
-
+        return redirect(url_for("index", result=response.choices[0].text, result_url=urllib.parse.quote(response.choices[0].text.encode('utf-8')))) 
+        
     result = request.args.get("result")
-    return render_template("index.html", result=result, twi=response_twi.choices[0].text)
+    result_url = request.args.get("result_url")
+    return render_template("index.html", result=result, result_url=result_url, twi=response_twi.choices[0].text)
 
 
 def generate_prompt(animal):
     return """
     I want you to create a virtual world idea elevator pitch based on Twitter handle """+animal+"""and sponsored by big brand Twitter handle.
 Add the idea of monetization with digital items or NFT.
-write it as discussion provocative tweet and include given handle """+animal+""" and big brand twitter handle. All hashtags should be in the very end. Before all hashtags include @x_la_official. Output should not be more than 280 total.
+write it as discussion provocative tweet and include given handle """+animal+""" and big brand twitter handle. Make sure there is no hashtags and no special characters. Output should not be  more that 230 characters total.
 """

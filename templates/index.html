@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+  <title>OpenAI Primer</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='dog.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+  <img src="{{ url_for('static', filename='dog.png') }}" class="icon" />
+  <h3>Generate a Pitch</h3>
+  <form action="/" method="post">
+    <input type="text" name="animal" placeholder="Enter a Twitter account" required />
+    {% if twi %}
+    <div class="twi">{{ twi }}</div>
+    {% endif %}
+    <input type="submit" value="Generate a pitch" />
+  </form>
+  {% if result %}
+  <div class="result">{{ result }}</div>
+  <a href="https://twitter.com/intent/tweet?text={{result}} @x_la_official" target="_blank">
+	  <button>Post on Twitter</button>
+  </a>
+  {% endif %}
+</body>
